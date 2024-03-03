@@ -4,7 +4,7 @@ from .models import Course
 class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
-        fields = ['course_title', 'course_code', 'tag', 'semester', 'credits']
+        fields = ['title', 'code', 'tag', 'semester', 'credits']
 
     def validate(self, data):
         """
