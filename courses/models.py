@@ -11,10 +11,15 @@ class Course(models.Model):
         ('dept_elective', 'Department Elective'),
     ]
 
+    SEMESTER_CHOICES = [
+        ('fall','Fall'),
+        ('spring', 'Spring')
+    ]
+
     title = models.CharField(max_length=255)
     code = models.CharField(max_length=20)
     tag = models.CharField(max_length=20, choices=TITLE_CHOICES)
-    semester = models.IntegerField()
+    semester = models.CharField(max_length=20, choices=SEMESTER_CHOICES)
     credits = models.FloatField()
 
     def __str__(self):
