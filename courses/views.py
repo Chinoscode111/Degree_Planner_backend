@@ -56,15 +56,6 @@ def getUserCourses(request):
     courses = student.courses_taken.all()
     data = dict()
     for course in courses:
-        # data[course.course.year]['Autumn' if course.course.semester_type == 1 else 'Spring'][course.course.course.code] = {
-        #     'code': course.course.course.code,
-        #     'title': course.course.course.title,
-        #     'semester': 'Autumn' if course.course.semester_type == 1 else 'Spring',
-        #     'credits': course.course.course.credits,
-        #     'tag': course.course.course.tag,
-        #     'year': list(course.course.course.years)
-        # }
-
         data[course.course.year] = {}
         data[course.course.year]['Autumn' if course.course.semester_type == 1 else 'Spring'] = {}
 
