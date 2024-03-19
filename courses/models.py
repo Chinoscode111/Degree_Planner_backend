@@ -10,7 +10,6 @@ TITLE_CHOICES = [
     ('dept_elective', 'Department Elective'),
 ]
 
-<<<<<<< HEAD
 # TODO: Check this...
 GRADE_CHOICES = [
     ('AP', 10),
@@ -49,17 +48,6 @@ class Course(models.Model):
     title = models.CharField(max_length=255)
     code = models.CharField(max_length=20)
     tag = models.CharField(max_length=20, choices=TITLE_CHOICES)
-=======
-    SEMESTER_CHOICES = [
-        ('fall','Fall'),
-        ('spring', 'Spring')
-    ]
-
-    title = models.CharField(max_length=255)
-    code = models.CharField(max_length=20)
-    tag = models.CharField(max_length=20, choices=TITLE_CHOICES)
-    semester = models.CharField(max_length=20, choices=SEMESTER_CHOICES)
->>>>>>> 5a9c5f1f062e6be0814a94017fb97be56ccada0a
     credits = models.FloatField()
     semester = models.IntegerField(default=1)
     years = models.JSONField(default=list)
