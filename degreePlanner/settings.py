@@ -71,6 +71,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'degreePlanner.wsgi.application'
 
+NO_CORS_HEADERS = [
+    '192.168.159.209:5050',
+    'localhost:3000'
+]
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases

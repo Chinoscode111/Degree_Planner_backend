@@ -1,7 +1,6 @@
 # myapp/urls.py
 
 from django.urls import path
-from .views import CourseListCreateView
 from .views import *
 
 # URL Path: /api/___
