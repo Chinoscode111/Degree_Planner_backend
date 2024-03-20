@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders', # Add this line
     'rest_framework',
     'courses',
 ]
@@ -49,6 +50,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'degreePlanner.urls'
@@ -71,10 +73,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'degreePlanner.wsgi.application'
 
-NO_CORS_HEADERS = [
-    '192.168.159.209:5050',
-    'localhost:3000'
+CORS_ALLOWED_ORIGINS = [
+    'http://192.168.159.209:5050',
+    'http://localhost:5500',
 ]
+
+# CORS_ALLOW_ALL_ORIGINS = True
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
