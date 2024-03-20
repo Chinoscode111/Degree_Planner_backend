@@ -4,6 +4,8 @@ from .models import *
 from .serializers import CourseSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from django.http import JsonResponse
+import json
 
 # Create your views here.
 
@@ -13,23 +15,19 @@ class CourseListCreateView(generics.ListCreateAPIView):
 
 @api_view(['GET'])
 def getCourseForSemester(request):
-    rollnum = request.GET['rollnum']    
-    print(rollnum)
+    rollnum = request.GET.get('rollnum', '')
     student = User.objects.get(rollnum=rollnum.lower())
-    print(student)
-    # semester = request.GET['semester']
-    courses = student.courses_taken.all()
-    print(courses)
-    # data = {
-    #     courses
-    # }
-    # return Response(data)
-    data = dict()
+    data = {}
     for course in student.courses_taken.all():
-        data = dict()
-        if data.keys().__contains__(course.semester_type):
-            data[course.semester_type].append(course)
+        if course.semester_type not in data:
+            data[course.semester_type] = []
+        data[course.semester_type].append({
+            'title': course.course.title,
+            'code': course.course.code,
+            'year': course.course.year
+        })
     return Response(data)
+
 
 
 # Course API
@@ -51,24 +49,26 @@ def getCourses(request):
 
 @api_view(['GET'])
 def getUserCourses(request):
-    rollnum = request.GET['rollnum']
+    rollnum = request.GET.get('rollnum', '')
     student = User.objects.get(rollnum=rollnum.lower())
-    courses = student.courses_taken.all()
-    data = dict()
-    for course in courses:
-        data[course.course.year] = {}
-        data[course.course.year]['Autumn' if course.course.semester_type == 1 else 'Spring'] = {}
-
-    for course in courses:
-        data[course.course.year]['Autumn' if course.course.semester_type == 1 else 'Spring'][course.course.course.code] = {
-            'code': course.course.course.code,
-            'title': course.course.course.title,
-            'semester': 'Autumn' if course.course.semester_type == 1 else 'Spring',
-            'credits': course.course.course.credits,
-            'tag': course.course.course.tag,
-            'status': course.status
+    data = {}
+    for course_taken in student.courses_taken.all():
+        year = course_taken.course.year
+        semester = 'Autumn' if course_taken.course.semester_type == 1 else 'Spring'
+        if year not in data:
+            data[year] = {}
+        if semester not in data[year]:
+            data[year][semester] = {}
+        data[year][semester][course_taken.course.code] = {
+            'title': course_taken.course.title,
+            'code': course_taken.course.code,
+            'semester': semester,
+            'credits': course_taken.course.credits,
+            'tag': course_taken.course.tag,
+            'status': course_taken.status
         }
     return Response(data)
+
 
 @api_view(['GET'])
 def getProgress(request):
@@ -96,4 +96,3 @@ def getProgress(request):
         elif course.course.course.tag == 'hasmed':
             data['hasmed_credits'] += course.course.course.credits
     return Response(data)
-    
