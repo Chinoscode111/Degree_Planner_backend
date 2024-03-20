@@ -9,10 +9,6 @@ import json
 
 # Create your views here.
 
-class CourseListCreateView(generics.ListCreateAPIView):
-    queryset = Course.objects.all()
-    serializer_class = CourseSerializer
-
 @api_view(['GET'])
 def getCourseForSemester(request):
     rollnum = request.GET.get('rollnum', '')
@@ -34,16 +30,16 @@ def getCourseForSemester(request):
 @api_view(['GET'])
 def getCourses(request):
     courses = Course.objects.all()
-    data = dict()
+    data = list()
     for course in courses:
-        data[course.code] = {
+        data.append({
             'code': course.code,
             'title': course.title,
             'semester': 'Autumn' if course.semester == 1 else 'Spring',
             'credits': course.credits,
             'tag': course.tag,
             'year': list(course.years)
-        }
+        })
         print(course)
     return Response(data)
 
