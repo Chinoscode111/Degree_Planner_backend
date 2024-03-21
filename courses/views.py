@@ -49,6 +49,7 @@ def getCourses(request):
         print(course)
     return Response(data)
 
+
 @api_view(['GET'])
 @login_required
 def getUserCourses(request):

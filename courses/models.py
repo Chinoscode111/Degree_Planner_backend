@@ -42,7 +42,6 @@ class Department(models.Model):
 
 class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='student')
-    username = models.CharField(max_length=10)
     password = models.CharField(max_length=10)
     rollnum = models.CharField(max_length=10, unique=True)
     department = models.ForeignKey(Department, on_delete=models.CASCADE, related_name='students')
