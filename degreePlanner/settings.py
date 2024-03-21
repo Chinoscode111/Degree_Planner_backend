@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'corsheaders', # Add this line
     'rest_framework',
     'courses',
+    'login_api',
 ]
 
 MIDDLEWARE = [
@@ -75,7 +76,9 @@ WSGI_APPLICATION = 'degreePlanner.wsgi.application'
 
 CORS_ALLOWED_ORIGINS = [
     'http://192.168.159.209:5050',
+    'http://192.168.159.80:3000',
     'http://localhost:5500',
+    'http://localhost:3000'
 ]
 
 # CORS_ALLOW_ALL_ORIGINS = True

@@ -1,17 +1,24 @@
 from django.shortcuts import render
+from numpy import roll
 from rest_framework import generics
+from sympy import degree
 from .models import *
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.http import JsonResponse
 import json
+from django.contrib.auth import authenticate
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
 @api_view(['GET'])
+@login_required
 def getCourseForSemester(request):
-    rollnum = request.GET.get('rollnum', '')
-    student = User.objects.get(rollnum=rollnum.lower())
+    rollnum = request.user.student.rollnum
+    student = Student.objects.get(rollnum=rollnum.lower())
     data = {}
     for course in student.courses_taken.all():
         if course.course.semester_type not in data:
@@ -43,9 +50,10 @@ def getCourses(request):
     return Response(data)
 
 @api_view(['GET'])
+@login_required
 def getUserCourses(request):
-    rollnum = request.GET.get('rollnum', '')
-    student = User.objects.get(rollnum=rollnum.lower())
+    rollnum = request.user.student.rollnum
+    student = Student.objects.get(rollnum=rollnum.lower())
     data = {}
     for course_taken in student.courses_taken.all():
         year = course_taken.course.year
@@ -66,9 +74,10 @@ def getUserCourses(request):
 
 
 @api_view(['GET'])
+@login_required
 def getProgress(request):
-    rollnum = request.GET['rollnum']
-    student = User.objects.get(rollnum=rollnum.lower())
+    rollnum = request.user.student.rollnum
+    student = Student.objects.get(rollnum=rollnum.lower())
     courses = student.courses_taken.all()
     data = {
         'total_credits': 0,
@@ -91,3 +100,41 @@ def getProgress(request):
         elif course.course.course.tag == 'hasmed':
             data['hasmed_credits'] += course.course.course.credits
     return Response(data)
+
+@csrf_exempt
+def login_view(request):
+    if request.method == 'POST':
+        roll_number = request.POST.get('roll_number')
+        password = request.POST.get('password')
+        print(roll_number, password)
+        print(User.objects.all().get(username=roll_number).password == password)
+        user = authenticate(request, username=roll_number, password=password)
+        print(user)
+        if user is not None:
+            login(request, user)
+            return JsonResponse({'status': 'success'})
+        else:
+            return JsonResponse({'status': 'error', 'message': 'Invalid credentials'})
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Invalid method'})
+    
+@csrf_exempt
+def register_view(request):
+    if request.method == 'POST':
+
+        roll_number = request.POST.get('roll_number')
+        password = request.POST.get('password')
+        department = request.POST.get('department')
+        degree = request.POST.get('degree')
+        # Rest of the code...
+        if User.objects.filter(username=roll_number).exists():
+            return JsonResponse({'status': 'error', 'message': 'User already exists'})
+
+        profile = User.objects.create_user(username=roll_number, password=password)
+        profile.student = Student(user=profile, username=roll_number, password=password, rollnum=roll_number, department=Department.objects.get(code=department), degree=degree)
+        profile.save()
+        profile.student.save()
+
+        return JsonResponse({'status': 'success'})
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Invalid method'})

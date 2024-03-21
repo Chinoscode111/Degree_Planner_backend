@@ -1,4 +1,4 @@
-# myapp/urls.py
+
 
 from django.urls import path
 from .views import *
@@ -10,4 +10,6 @@ urlpatterns = [
     path('courses/', getCourses), 
     path('userCourses/', getUserCourses), # Requires rollnum
     path('progress/', getProgress), # Requires rollnum
+    path('register/', register_view),
+    path('login/', login_view)
 ]
