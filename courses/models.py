@@ -28,6 +28,11 @@ STATUS = [
     ('plan', 'Planned')
 ]
 
+SEMESTER = [
+    ('autumn', 'Autumn'),
+    ('spring', 'Spring')
+]
+
 class Department(models.Model):
     name = models.CharField(max_length=100)
     code = models.CharField(max_length=3)
@@ -38,7 +43,7 @@ class Department(models.Model):
 class User(AbstractUser):
     rollnum = models.CharField(max_length=10)
     department = models.ForeignKey(Department, on_delete=models.CASCADE, related_name='students')
-    semester = models.IntegerField(default=1)
+    semester = models.CharField(max_length=10, choices=SEMESTER)
     groups = models.ManyToManyField(Group, related_name="custom_user_set", default=1)
     user_permissions = models.ManyToManyField(Permission, related_name="custom_user_set",default=1)
     def __str__(self):
@@ -49,7 +54,7 @@ class Course(models.Model):
     code = models.CharField(max_length=20)
     tag = models.CharField(max_length=20, choices=TITLE_CHOICES)
     credits = models.FloatField()
-    semester = models.IntegerField(default=1)
+    semester = models.CharField(max_length=10, choices=SEMESTER)
     years = models.JSONField(default=list)
     def __str__(self):
         return self.title
@@ -58,7 +63,7 @@ class CourseOffered(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="courses_offered")
     prof = models.CharField(max_length=100)
     year = models.IntegerField()
-    semester_type = models.IntegerField(default=1)
+    semester_type = models.CharField(max_length=10, choices=SEMESTER)
 
 class CourseTaken(models.Model):
     student = models.ForeignKey(User, on_delete=models.CASCADE, related_name='courses_taken', default=1)
