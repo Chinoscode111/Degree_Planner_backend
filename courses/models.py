@@ -63,7 +63,7 @@ class CourseOffered(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="courses_offered")
     prof = models.CharField(max_length=100)
     year = models.IntegerField()
-    semester_type = models.CharField(max_length=10, choices=SEMESTER)
+    semester_type = models.CharField(max_length=10, choices=SEMESTER)   
 
 class CourseTaken(models.Model):
     student = models.ForeignKey(User, on_delete=models.CASCADE, related_name='courses_taken', default=1)

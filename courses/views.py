@@ -14,11 +14,11 @@ def getCourseForSemester(request):
     student = User.objects.get(rollnum=rollnum.lower())
     data = {}
     for course in student.courses_taken.all():
-        if course.semester_type not in data:
-            data[course.semester_type] = []
-        data[course.semester_type].append({
-            'title': course.course.title,
-            'code': course.course.code,
+        if course.course.semester_type not in data:
+            data[course.course.semester_type] = []
+        data[course.course.semester_type].append({
+            'title': course.course.course.title,
+            'code': course.course.course.code,
             'year': course.course.year
         })
     return Response(data)
