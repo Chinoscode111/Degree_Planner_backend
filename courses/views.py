@@ -43,7 +43,7 @@ def getCourses(request):
             'semester':course.semester,
             'credits': course.credits,
             'tag': course.tag,
-            'year': list(course.years)
+            'year': course.years
         })
         print(course)
     return Response(data)
