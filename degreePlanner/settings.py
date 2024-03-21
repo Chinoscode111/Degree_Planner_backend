@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'corsheaders', # Add this line
     'rest_framework',
     'courses',
+    'login_api',
 ]
 
 MIDDLEWARE = [

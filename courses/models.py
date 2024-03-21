@@ -36,7 +36,9 @@ class Department(models.Model):
         return f'{self.code} : {self.name}'
 
 class User(AbstractUser):
-    rollnum = models.CharField(max_length=10)
+    username = models.CharField(max_length=10)
+    password = models.CharField(max_length=10)
+    rollnum = models.CharField(max_length=10, primary_key=True)
     department = models.ForeignKey(Department, on_delete=models.CASCADE, related_name='students')
     semester = models.IntegerField(default=1)
     groups = models.ManyToManyField(Group, related_name="custom_user_set", default=1)
@@ -61,7 +63,7 @@ class CourseOffered(models.Model):
     semester_type = models.IntegerField(default=1)
 
 class CourseTaken(models.Model):
-    student = models.ForeignKey(User, on_delete=models.CASCADE, related_name='courses_taken', default=1)
+    student = models.ForeignKey(User, on_delete=models.CASCADE, related_name='courses_taken', to_field='rollnum', default=1)
     course = models.ForeignKey(CourseOffered, on_delete=models.CASCADE, related_name='courses_taken')
     # grade = models.CharField(max_length=2, choices=GRADE_CHOICES)
     study_year = models.IntegerField(default=1)
