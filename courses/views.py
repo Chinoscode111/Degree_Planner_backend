@@ -34,7 +34,7 @@ def getCourses(request):
         data.append({
             'code': course.code,
             'title': course.title,
-            'semester': 'Autumn' if course.semester == 1 else 'Spring',
+            'semester':course.semester,
             'credits': course.credits,
             'tag': course.tag,
             'year': list(course.years)
