@@ -132,7 +132,7 @@ def register_view(request):
             return JsonResponse({'status': 'error', 'message': 'User already exists'})
 
         profile = User.objects.create_user(username=roll_number, password=password)
-        profile.student = Student(user=profile, username=roll_number, password=password, rollnum=roll_number, department=Department.objects.get(code=department), degree=degree)
+        profile.student = Student(user=profile, password=password, rollnum=roll_number, department=Department.objects.get(code=department), degree=degree)
         profile.save()
         profile.student.save()
 
