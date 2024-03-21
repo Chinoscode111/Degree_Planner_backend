@@ -11,5 +11,6 @@ urlpatterns = [
     path('userCourses/', getUserCourses), # Requires rollnum
     path('progress/', getProgress), # Requires rollnum
     path('register/', register_view),
-    path('login/', login_view)
+    path('login/', login_view),
+    path('course/', addCourse)
 ]

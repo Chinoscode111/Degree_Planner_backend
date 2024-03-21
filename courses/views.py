@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from numpy import roll
 from rest_framework import generics
-from sympy import degree
 from .models import *
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -48,6 +47,20 @@ def getCourses(request):
         })
         print(course)
     return Response(data)
+
+@csrf_exempt
+def addCourse(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        
+        if Course.objects.filter(code=data['code']).exists(): # Check if course already exists
+            return JsonResponse({'status': 'error', 'message': 'Course already exists'})
+        else:
+            course = Course(code=data['code'], title=data['title'], semester=data['semester'], credits=data['credits'], tag=data['tag'], years=data['years'])
+            course.save()
+            return JsonResponse({'status': 'success'})
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Invalid method'})
 
 
 @api_view(['GET'])
