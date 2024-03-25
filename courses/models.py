@@ -63,13 +63,17 @@ class CourseOffered(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="courses_offered")
     prof = models.CharField(max_length=100)
     year = models.IntegerField()
-    semester_type = models.CharField(max_length=10, choices=SEMESTER)   
+    semester_type = models.CharField(max_length=10, choices=SEMESTER) 
+
+    def __str__(self):
+        return f'{self.course.title} {self.course.code}'  
 
 class CourseTaken(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='courses_taken', to_field='rollnum', default=1)
     course = models.ForeignKey(CourseOffered, on_delete=models.CASCADE, related_name='courses_taken')
     # grade = models.CharField(max_length=2, choices=GRADE_CHOICES)
     status = models.CharField(max_length=10, choices=STATUS, default='completed')
+    study_year = models.IntegerField()
 
     def __str__(self):
         return f'{self.course.course.title} {self.course.course.code} {self.course.year}'

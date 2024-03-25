@@ -48,19 +48,33 @@ def getCourses(request):
         print(course)
     return Response(data)
 
-@csrf_exempt
+
+@api_view(['POST'])
 def addCourse(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        
-        if Course.objects.filter(code=data['code']).exists(): # Check if course already exists
-            return JsonResponse({'status': 'error', 'message': 'Course already exists'})
-        else:
-            course = Course(code=data['code'], title=data['title'], semester=data['semester'], credits=data['credits'], tag=data['tag'], years=data['years'])
-            course.save()
-            return JsonResponse({'status': 'success'})
-    else:
-        return JsonResponse({'status': 'error', 'message': 'Invalid method'})
+    try:
+        student_rollnum = request.data.get('student_rollnum')
+        course_offered_code = request.data.get('course_offered_code')
+        status = request.data.get('status')
+        study_year = request.data.get('study_year') 
+
+
+        student = Student.objects.get(rollnum=student_rollnum)
+        course_offered = CourseOffered.objects.get(course__code=course_offered_code)
+
+        course_taken = CourseTaken.objects.create(
+            student=student,
+            course=course_offered,
+            status=status, 
+            study_year=study_year
+        )
+
+        return JsonResponse({'message': 'Course added successfully.'}, status=201)
+    except Student.DoesNotExist:
+        return JsonResponse({'error': 'Student not found.'}, status=404)
+    except CourseOffered.DoesNotExist:
+        return JsonResponse({'error': 'Course not found.'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
 
 
 @api_view(['GET'])
